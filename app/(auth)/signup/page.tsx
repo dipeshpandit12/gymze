@@ -44,9 +44,9 @@ export default function Signup() {
                         <label htmlFor="email" className="block text-sm text-gray-300">
                             Email
                         </label>
-                        <input 
+                        <input
                             id="email"
-                            type="email" 
+                            type="email"
                             placeholder="Enter your email" 
                             value={email} 
                             onChange={(e) => setEmail(e.target.value)} 

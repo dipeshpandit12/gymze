@@ -1,24 +1,25 @@
+'use client';
+
 import Link from "next/link";
+import SignupLogin from "./Signup-login";
+import Logout from "./Logout";
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
+    const pathname = usePathname();
+
     return (
-        <nav className="flex justify-between items-center p-4 md:p-6 bg-[#0A0A0A] text-white">
-            <Link href="/" className="text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity">
+        <nav className="flex justify-between items-center p-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg">
+            <Link href="/" className="text-2xl font-bold hover:text-blue-400 transition-colors">
                 Gymze
             </Link>
-            <div className="flex gap-4">
-                <Link 
-                    href="/login" 
-                    className="px-4 py-2 text-gray-300 hover:text-white transition-colors rounded-full hover:bg-[#1A1A1A]"
-                >
-                    Login
-                </Link>
-                <Link 
-                    href="/signup" 
-                    className="px-4 py-2 bg-white text-black font-medium rounded-full hover:opacity-90 transition-opacity"
-                >
-                    Sign up
-                </Link>
+
+            <div className="flex gap-6">
+                {pathname === '/dashboard' ? (
+                    <Logout />
+                ) : (
+                    <SignupLogin />
+                )}
             </div>
         </nav>
     )
