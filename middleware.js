@@ -6,9 +6,14 @@ export function middleware(request) {
     const path = request.nextUrl.pathname;
     const isPublicPath = path === '/login' || path === '/signup';
     const isDashboardPath = path === '/dashboard' || path.startsWith('/dashboard/');
+    const isRootPath = path === '' || path === '/';
     const token = request.cookies.get('token')?.value || '';
 
     if(isPublicPath && token){
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+
+    if(isRootPath && token) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
@@ -20,6 +25,7 @@ export function middleware(request) {
 // See "Matching Paths" below to learn more
 export const config = {
   matcher: [
+    '/',
     '/login',
     '/signup',
     '/dashboard',
