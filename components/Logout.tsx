@@ -15,11 +15,13 @@ export default function Logout() {
         }
     }
     return (
+      
         <button
-        onClick={handleLogout}
-        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
-    >
-        Logout
-    </button>
+         onClick={handleLogout}
+         className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+        >
+          Logout
+        </button>
+
     )
 }
