@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import SignupLogin from "./Signup-login";
-import Logout from "./Logout";
 import { usePathname } from 'next/navigation';
+import Profile from "./Profile";
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -15,8 +15,8 @@ export default function Navbar() {
             </Link>
 
             <div className="flex gap-6">
-                {pathname === '/dashboard' ? (
-                    <Logout />
+                {pathname.startsWith('/dashboard') ? (
+                    <Profile />
                 ) : (
                     <SignupLogin />
                 )}
