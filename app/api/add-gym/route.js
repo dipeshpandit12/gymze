@@ -62,6 +62,7 @@ export async function POST(req) {
                     { success: true, video },
                     { status: 201 }
                 );
+                
         }catch(error){
             console.error('Mongodb Upload error:', error);
         }
