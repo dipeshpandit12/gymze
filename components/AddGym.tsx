@@ -4,42 +4,47 @@ import {useState} from "react";
 
 export default function UploadVideo() {
   const [title,setTitle] = useState("");
-  const [url,setUrl] = useState("");
+  const [video,setVideo] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.item(0);
+    if (file) {
+      setVideo(file);
+    };
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
-    if (!title || !url) {
+    if (!title || !video) {
         setError('Please fill in all fields');
         return;
     }
 
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('video', video);
+
     try {
         const response = await fetch("/api/add-gym", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${document.cookie.split('token=')[1]?.split(';')[0]}`
-            },
-            body: JSON.stringify({ title, url }),
+            body: formData,
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-            // Reset form
             setTitle('');
-            setUrl('');
+            setVideo(null);
+            setError("uploaded Successfully");
         } else {
-            setError("Failed to add gym");
+            const data = await response.json();
+            setError(`Upload failed: ${data.details || 'Unknown error'}`);
         }
     } catch (error) {
-      setError(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      console.error('Fetch Error:', error);
+        setError(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-}
+};
 
   return (
     <>
@@ -59,13 +64,13 @@ export default function UploadVideo() {
     </div>
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
-        URL of the video
+        Upload video
       </label>
       <input
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        type="url"
-        className="w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm 
+        accept="video/*"
+        onChange={handleFileChange}
+        type="file"
+        className="w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm
         bg-black text-white placeholder-gray-400
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
