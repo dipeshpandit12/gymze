@@ -21,21 +21,21 @@ export default function DisplayGym() {
     }, []);
 
     const fetchTitles = async () => {
-        // try {
-        //     const response = await fetch('/api/get-gym-data');
-        //     const data = await response.json();
+        try {
+            const response = await fetch('/api/get-gym-data');
+            const data = await response.json();
 
-        //     if (response.ok) {
-        //         setTitles(data);
-        //     } else {
-        //         setError(data.message || 'Failed to fetch titles');
-        //     }
-        // } catch (err) {
-        //     setError('Failed to fetch titles');
-        //     console.error(err);
-        // } finally {
-        //     setLoading(false);
-        // }
+            if (response.ok) {
+                setTitles(data);
+            } else {
+                setError(data.message || 'Failed to fetch titles');
+            }
+        } catch (err) {
+            setError('Failed to fetch titles');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const startEditing = (video: VideoTitle) => {
