@@ -57,15 +57,14 @@ export default function DisplayGym() {
             });
 
             if (response.ok) {
-                // Update local state with new title
-                setTitles(titles.map(title =>
-                    title._id === id
-                        ? { ...title, videoTitle: editedTitle }
-                        : title
-                ));
+                if (Array.isArray(titles)) {
+                    setTitles(titles.map(title =>
+                        title._id === id
+                            ? { ...title, videoTitle: editedTitle }
+                            : title
+                    ));
+                }
                 setEditingId(null);
-            } else {
-                throw new Error('Failed to update title');
             }
         } catch (error) {
             console.error('Error updating title:', error);
@@ -81,7 +80,8 @@ export default function DisplayGym() {
 
     return (
         <div className="space-y-4 p-4">
-            {titles.map((video) => (
+            {titles && Array.isArray(titles) && titles.length > 0 ? (
+    titles.map((video) => (
                 <div
                     key={video._id}
                     className="flex items-center justify-between p-4 border rounded-lg shadow-sm"
@@ -137,7 +137,10 @@ export default function DisplayGym() {
                         </div>
                     </label>
                 </div>
-            ))}
+             ))
+            ) : (
+                <div>No videos available</div>
+            )}
         </div>
     );
 }
