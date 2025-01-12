@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -10,27 +11,59 @@ export default function Login() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const loadingToast = toast.loading("Logging in...");
+
         try {
             const response = await fetch("/api/auth/login", {
                 method: "POST",
                 body: JSON.stringify({ email, password }),
             });
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                router.push("/dashboard");
+                toast.update(loadingToast, {
+                    render: "Login successful!",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 2000
+                });
+                setTimeout(() => {
+                    router.push("/dashboard");
+                }, 2000);
             } else {
-                console.error("Login failed");
+                toast.update(loadingToast, {
+                    render: "Login failed",
+                    type: "error",
+                    isLoading: false,
+                    autoClose: 2000
+                });
             }
-        } catch (error) {
-            console.error("Login failed", error);
+        } catch {
+            toast.update(loadingToast, {
+                render: "Login failed",
+                type: "error",
+                isLoading: false,
+                autoClose: 2000
+            });
         }
     }
 
     return (
         <div className="h-[calc(100vh-64px)] bg-[#0A0A0A] text-white overflow-hidden">
             <div className="container mx-auto px-4 flex flex-col justify-center items-center h-full max-w-md">
+            <ToastContainer position="top-right" />
                 {/* Header */}
+                <ToastContainer
+                    position="top-right"
+                    autoClose={2000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
                 <div className="text-center mb-8 w-full">
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
                         Welcome back
