@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Signup() {
     const [email, setEmail] = useState("");
@@ -16,19 +17,39 @@ export default function Signup() {
                 body: JSON.stringify({ email, password }),
             });
             if(response.ok){
-                const data = await response.json();
-                console.log(data);
-                router.push("/login");
+                toast.success('Successful: Redirecting to login...', {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                setTimeout(() => {
+                    router.push("/login");
+                }, 2000);
             }else{
-                console.error("Signup failed");
+                toast.error('Signup failed. Please try again.');
             }
-        }catch(error){
-            console.error("Signup failed", error);
+        }catch{
+            toast.error('An error occurred during signup.');
         }
     }
 
     return (
         <div className="h-[calc(100vh-64px)] bg-[#0A0A0A] text-white overflow-hidden">
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
             <div className="container mx-auto px-4 flex flex-col justify-center items-center h-full max-w-md">
                 <div className="text-center mb-8 w-full">
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
