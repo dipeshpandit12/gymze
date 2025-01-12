@@ -4,6 +4,7 @@ import connectDB from "@/libs/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
 export async function POST(req) {
     try {
         const { email, password } = await req.json();

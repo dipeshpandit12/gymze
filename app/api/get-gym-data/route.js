@@ -20,20 +20,20 @@ export async function GET() {
         const userId = decoded.userId;
 
         await connectDB();
-        const videoTitles = await Video.find({ userId }).select('videoTitle');
+        const videoTitles = await Video.find({ userId, detected_items: { $exists: true, $ne: [] } }).select('videoTitle');
 
         if (!videoTitles || videoTitles.length === 0) {
             return NextResponse.json(
-                { message: "No videos found" },
-                { status: 404 }
+                { message: "No Gym location found" },
+                { status: 200 }
             );
         }
 
         return NextResponse.json(videoTitles, { status: 200 });
     } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching gym location:", error);
         return NextResponse.json(
-            { message: error.message || "Error fetching videos" },
+            { message: error.message || "Error fetching gym location" },
             { status: 500 }
         );
     }

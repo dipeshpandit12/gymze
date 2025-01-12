@@ -46,15 +46,15 @@ export default function Login() {
                         <label htmlFor="email" className="block text-sm text-gray-300">
                             Email
                         </label>
-                        <input 
+                        <input
                             id="email"
-                            type="email" 
-                            placeholder="Enter your email" 
-                            value={email} 
-                            onChange={(e) => setEmail(e.target.value)} 
-                            className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333]
                                      text-white placeholder-gray-500 focus:outline-none focus:border-blue-500
-                                     transition-colors" 
+                                     transition-colors"
                         />
                     </div>
 
