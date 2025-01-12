@@ -60,7 +60,7 @@ export async function POST(req) {
             // Trigger FastAPI after saving video to MongoDB
             try {
                 // Send POST request to FastAPI
-                const fastApiResponse = await fetch("https://gymze-backend-fast-api.onrender.com/process-video", {
+                const fastApiResponse = await fetch("http://127.0.0.1:8000/process-video", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
