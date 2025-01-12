@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from 'react-toastify';
 
 export default function UploadVideo() {
   const [title, setTitle] = useState("");
@@ -11,22 +12,42 @@ export default function UploadVideo() {
     const file = e.target.files?.item(0);
     if (file) {
       setVideo(file);
+      toast.info('Video file selected', {
+        position: "top-right",
+        autoClose: 2000
+      });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setError(null);
 
     if (!title || !video) {
       setError("Please fill in all fields");
+      toast.error("Please fill in all fields", {
+        position: "top-right",
+        autoClose: 3000
+      });
       return;
-    }
+    };
 
     // Convert video to base64
     const reader = new FileReader();
     reader.readAsDataURL(video);
     reader.onload = async () => {
+      toast.info('Processing video...', {
+        position: "top-right",
+        autoClose: 2000
+      });
+
+    reader.onerror = () => {
+      toast.error('Error processing video file', {
+        position: "top-right",
+        autoClose: 3000
+      });
+    }
     const base64Video = reader.result;
 
       try {
@@ -37,14 +58,17 @@ export default function UploadVideo() {
           },
           body: JSON.stringify({
             title,
-            video: base64Video,
+            video: base64Video
           }),
         });
 
         if (response.ok) {
           setTitle("");
           setVideo(null);
-          setError("uploaded Successfully");
+          toast.success('Video uploaded successfully!', {
+            position: "top-right",
+            autoClose: 3000
+          });
         } else {
           const data = await response.json();
           setError(`Upload failed: ${data.details || "Unknown error"}`);
@@ -63,7 +87,7 @@ export default function UploadVideo() {
     <>
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-white-700">
             Name of the Gym
           </label>
           <input
@@ -76,7 +100,7 @@ export default function UploadVideo() {
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-white-700">
             Upload video
           </label>
           <input
@@ -96,7 +120,7 @@ export default function UploadVideo() {
           Submit
         </button>
       </form>
-      {error && <p className="text-red-500">{error}</p>}
+      {error && toast.error(error, {position: "top-right", autoClose: 3000 })}
     </>
   );
 }
