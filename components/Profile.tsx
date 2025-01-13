@@ -13,6 +13,10 @@ export default function Profile() {
         router.push('/dashboard/switch-gym');
         setIsMenuOpen(false);
     };
+    const handleEditProfile = () => {
+        router.push('/dashboard/editProfile');
+        setIsMenuOpen(false);
+    };
 
     return (
         <div >
@@ -51,8 +55,8 @@ export default function Profile() {
                                     Settings
                                 </button>
                                 <button
-                                    disabled
-                                    className="w-full text-left px-4 py-2 text-sm text-gray-400 cursor-not-allowed"
+                                    onClick={handleEditProfile}
+                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >
                                     Edit Profile
                                 </button>
