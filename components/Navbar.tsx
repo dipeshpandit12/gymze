@@ -10,7 +10,7 @@ export default function Navbar() {
 
     return (
         <nav className="flex justify-between items-center p-6 bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-lg">
-            <Link href="/" className="text-2xl font-bold hover:text-blue-400 transition-colors">
+            <Link href="/" className="text-2xl font-bold hover:text-green-400 transition-colors">
                 Gymze
             </Link>
 
