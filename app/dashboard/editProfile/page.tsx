@@ -1,277 +1,278 @@
 "use client";
 
-import { Formik, Form, Field, FormikHelpers } from 'formik';
-import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState, FormEvent , useEffect} from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
 interface ProfileData {
-    fitnessGoal: string;
-    customGoal: string;
-    age: number;
-    gender: string;
-    fitnessLevel: string;
-    height: number;
-    weight: number;
-    medicalConditions: string;
-  }
+  fitnessGoal: string;
+  age: string;
+  gender: string;
+  fitnessLevel: string;
+  height: string;
+  weight: string;
+  medicalConditions: string;
+}
 
-  const validationSchema = Yup.object({
-    fitnessGoal: Yup.string().required('Fitness goal is required'),
-    customGoal: Yup.string().required('Custom goal is required'),
-    age: Yup.number()
-      .required('Age is required')
-      .positive()
-      .integer(),
-    gender: Yup.string().required('Gender is required'),
-    fitnessLevel: Yup.string(),
-    height: Yup.number()
-      .required('Height is required')
-      .positive(),
-    weight: Yup.number()
-      .required('Weight is required')
-      .positive(),
-    medicalConditions: Yup.string().nullable()
-  });
+interface Errors {
+  [key: string]: string;
+}
 
-  const defaultValues: ProfileData = {
-    fitnessGoal: '',
-    customGoal: '',
-    age: 0,
-    gender: '',
-    fitnessLevel: '',
-    height: 0,
-    weight: 0,
-    medicalConditions: ''
+const defaultValues: ProfileData = {
+  fitnessGoal: '',
+  age: '',
+  gender: '',
+  fitnessLevel: '',
+  height: '',
+  weight: '',
+  medicalConditions: ''
 };
 
 export default function EditProfile() {
-  const [initialValues, setInitialValues] = useState<ProfileData>(defaultValues);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<ProfileData>(defaultValues);
+  const [errors, setErrors] = useState<Errors>({});
+
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch('/api/editProfile');
-        const data = await res.json();
-        setInitialValues(data || defaultValues);
-      } catch (err) {
-        console.error('Error loading profile:', err);
-        setError('Failed to load profile data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchProfile();
-  }, []);
+  },[]);
 
-  if (isLoading) {
-    return (
-      <div className="h-[calc(100vh-64px)] bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
-  }
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch('/api/editProfile');
+      const data = await response.json();
 
-  if (error) {
-    return (
-      <div className="h-[calc(100vh-64px)] bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-red-500">{error}</div>
-      </div>
-    );
-  }
-  const handleSubmit = async (values: ProfileData, { setSubmitting }: FormikHelpers<ProfileData>) => {
-    console.log('HandleSubmit called with values:', values); // Debug log
-    const loadingToast = toast.loading("Saving changes...");
+      if (response.ok) {
+        setFormData(data);
+      } else {
+        toast.error(data.message || 'Failed to fetch profile', {
+          position: 'top-right',
+          autoClose: 3000
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile:', error);
+      toast.error('Failed to fetch profile', {
+        position: 'top-right',
+        autoClose: 3000
+      });
+    }
+
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Errors = {};
+
+    if (!formData.fitnessGoal) newErrors.fitnessGoal = 'Fitness goal is required';
+    if (!formData.age) newErrors.age = 'Age is required';
+    if (!formData.gender) newErrors.gender = 'Gender is required';
+    if (!formData.fitnessLevel) newErrors.fitnessLevel = 'Fitness level is required';
+    if (!formData.height) newErrors.height = 'Height is required';
+    if (!formData.weight) newErrors.weight = 'Weight is required';
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
 
     try {
-      console.log('Sending request to API...'); // Debug log
-      const res = await fetch('/api/editProfile', {
+      const response = await fetch('/api/editProfile', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(values)
+        body: JSON.stringify({
+          fitnessGoal: formData.fitnessGoal,
+          age: formData.age,
+          gender: formData.gender,
+          fitnessLevel: formData.fitnessLevel,
+          height: formData.height,
+          weight: formData.weight,
+          medicalConditions: formData.medicalConditions || ''
+        })
       });
 
-      const data = await res.json();
-      console.log('API Response:', data); // Debug log
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to save');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update profile');
       }
 
-      toast.update(loadingToast, {
-        render: "Profile updated successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 2000
+      const data = await response.json();
+      console.log('Profile updated:', data);
+      toast.success('Profile updated successfully!', {
+        position: 'top-right',
+        autoClose: 3000
       });
+
     } catch (error) {
-      console.error('Profile update error:', error);
-      toast.update(loadingToast, {
-        render: error instanceof Error ? error.message : "Failed to update profile",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile', {
+        position: 'top-right',
+        autoClose: 3000
       });
-    } finally {
-      setSubmitting(false);
     }
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-[#0A0A0A] text-white overflow-auto py-8">
-      <ToastContainer position="top-right" theme="dark" />
-      <div className="container mx-auto px-4 max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Edit Profile</h2>
+    <div className="min-h-screen bg-[#121212] text-white p-8">
+      <div className="container mx-auto px-4 flex flex-col justify-center items-center h-full max-w-2xl">
+        <ToastContainer />
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={handleSubmit}
-        >
-          {({ errors, touched, values, isSubmitting }) => (
-            <Form className="space-y-5">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="block text-sm text-gray-300">Fitness Goal</label>
-                  <Field
-                    as="select"
-                    name="fitnessGoal"
-                    className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                             text-white placeholder-gray-500 focus:outline-none focus:border-blue-500
-                             transition-colors"
-                  >
-                    <option value="">Select a goal</option>
-                    <option value="gain">Gain Muscle</option>
-                    <option value="lose">Lose Weight</option>
-                    <option value="maintain">Maintain</option>
-                    <option value="other">Other</option>
-                  </Field>
-                  {errors.fitnessGoal && touched.fitnessGoal && (
-                    <div className="text-red-500 text-sm">{errors.fitnessGoal}</div>
-                  )}
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="block text-sm text-gray-300">Fitness Goal</label>
+            <select
+              name="fitnessGoal"
+              value={formData.fitnessGoal}
+              onChange={(e) => {
+                handleChange(e);
+              }}
+              className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                       text-white focus:outline-none focus:border-blue-500"
+            >
+              <option value="">Select a goal</option>
+              <option value="weightLoss">Weight Loss</option>
+              <option value="muscleGain">Muscle Gain</option>
+              <option value="endurance">Endurance</option>
+              <option value="custom">Custom Goal</option>
+            </select>
+            {errors.fitnessGoal && (
+              <div className="text-red-500 text-sm">{errors.fitnessGoal}</div>
+            )}
+          </div>
 
-                {values.fitnessGoal === 'other' && (
-                  <div className="space-y-2">
-                    <label className="block text-sm text-gray-300">Custom Goal</label>
-                    <Field
-                      name="customGoal"
-                      className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                               text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                    />
-                    {errors.customGoal && touched.customGoal && (
-                      <div className="text-red-500 text-sm">{errors.customGoal}</div>
-                    )}
-                  </div>
-                )}
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm text-gray-300">Age</label>
-                    <Field
-                      name="age"
-                      type="number"
-                      className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                               text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                    />
-                    {errors.age && touched.age && (
-                      <div className="text-red-500 text-sm">{errors.age}</div>
-                    )}
-                  </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-300">Age</label>
+              <input
+                type="number"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                         text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              />
+              {errors.age && (
+                <div className="text-red-500 text-sm">{errors.age}</div>
+              )}
+            </div>
 
-                  <div className="space-y-2">
-                    <label className="block text-sm text-gray-300">Gender</label>
-                    <Field
-                      as="select"
-                      name="gender"
-                      className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                               text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                    >
-                      <option value="">Select gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </Field>
-                    {errors.gender && touched.gender && (
-                      <div className="text-red-500 text-sm">{errors.gender}</div>
-                    )}
-                  </div>
-                </div>
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-300">Gender</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                         text-white focus:outline-none focus:border-blue-500"
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              {errors.gender && (
+                <div className="text-red-500 text-sm">{errors.gender}</div>
+              )}
+            </div>
+          </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm text-gray-300">Fitness Level</label>
-                  <Field
-                    as="select"
-                    name="fitnessLevel"
-                    className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                             text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="">Select level</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </Field>
-                  {errors.fitnessLevel && touched.fitnessLevel && (
-                    <div className="text-red-500 text-sm">{errors.fitnessLevel}</div>
-                  )}
-                </div>
+          <div className="space-y-2">
+            <label className="block text-sm text-gray-300">Fitness Level</label>
+            <select
+              name="fitnessLevel"
+              value={formData.fitnessLevel}
+              onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                       text-white focus:outline-none focus:border-blue-500"
+            >
+              <option value="">Select fitness level</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+            {errors.fitnessLevel && (
+              <div className="text-red-500 text-sm">{errors.fitnessLevel}</div>
+            )}
+          </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm text-gray-300">Height (cm)</label>
-                    <Field
-                      name="height"
-                      type="number"
-                      className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                               text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                    />
-                    {errors.height && touched.height && (
-                      <div className="text-red-500 text-sm">{errors.height}</div>
-                    )}
-                  </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-300">Height (cm)</label>
+              <input
+                type="number"
+                name="height"
+                value={formData.height}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                         text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              />
+              {errors.height && (
+                <div className="text-red-500 text-sm">{errors.height}</div>
+              )}
+            </div>
 
-                  <div className="space-y-2">
-                    <label className="block text-sm text-gray-300">Weight (kg)</label>
-                    <Field
-                      name="weight"
-                      type="number"
-                      className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                               text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                    />
-                    {errors.weight && touched.weight && (
-                      <div className="text-red-500 text-sm">{errors.weight}</div>
-                    )}
-                  </div>
-                </div>
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-300">Weight (kg)</label>
+              <input
+                type="number"
+                name="weight"
+                value={formData.weight}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                         text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              />
+              {errors.weight && (
+                <div className="text-red-500 text-sm">{errors.weight}</div>
+              )}
+            </div>
+          </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm text-gray-300">Medical Conditions (Optional)</label>
-                  <Field
-                    as="textarea"
-                    name="medicalConditions"
-                    className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
-                             text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
+          <div className="space-y-2">
+            <label className="block text-sm text-gray-300">Medical Conditions</label>
+            <textarea
+              name="medicalConditions"
+              value={formData.medicalConditions}
+              onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-[#1A1A1A] border border-[#333333] 
+                       text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              rows={4}
+              placeholder="List any medical conditions or injuries..."
+            />
+          </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-white text-black font-medium p-3 rounded-full
-                           hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </Form>
-          )}
-        </Formik>
+          <button
+            type="submit"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold 
+                     py-3 px-6 rounded-lg transition duration-200"
+          >
+            Update Profile
+          </button>
+        </form>
+      </div>
       </div>
     </div>
   );
