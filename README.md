@@ -126,3 +126,14 @@ CLOUDINARY_API_SECRET=your_api_secret
 GEMINI_API_KEY=your_gemini_api_key
 
 ```
+# 🏋️‍♂️ Gymze Backend (FastAPI Setup)
+
+---
+
+##  Explore the Repository
+
+Click below to dive into the codebase and documentation:
+
+🔗 **[Visit the Repository](https://github.com/dipeshpandit12/gymze-backend-fast-api)**
+
+---
