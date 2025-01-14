@@ -1,3 +1,13 @@
+# Disclaimer
+
+The `upload-new-gym-location` feature is currently not functional due to limitations in the free version. To get the default uploaded gym locations, please try logging in with the following credentials:
+
+- **Email:** 3@gmail.com  
+- **Password:** 3  
+
+I apologize for any inconvenience and appreciate your understanding!
+
+
 # Gymze 💪
 
 ## 🎯 Project Overview
