@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gymze
 
-## Getting Started
+An AI-powered gym companion that transforms your workout experience by automatically detecting available equipment and creating personalized routines based on your gym's facilities.
 
-First, run the development server:
+## 🎯 Purpose
 
+As someone who frequents different gyms (apartment, work, college), I found it challenging to adapt workouts based on available equipment. Gymze solves this by:
+- Automatically detecting gym equipment through video uploads
+- Creating personalized workout routines based on available equipment
+- Managing multiple gym locations efficiently
+- Tracking fitness progress across different locations
+
+## ✨ Core Features
+
+- **Smart Gym Detection**
+  - Video-based equipment recognition
+  - AI-powered equipment analysis
+  - Multiple location management
+  
+- **Personalized Workouts**
+  - Custom routine generation
+  - Equipment-based exercise suggestions
+  - Workout history tracking
+
+- **Location Management**
+  - Multiple gym profiles
+  - Equipment inventory per location
+  - Quick location switching
+
+## 🛠 Tech Stack
+
+- **Frontend**
+  - Next.js
+  - Tailwind CSS
+  - JWT Authentication
+  
+- **Backend**
+  - Node.js/Express.js
+  - MongoDB
+  - Flask (AI Processing API)
+
+- **AI/ML**
+  - Computer Vision for equipment detection
+  - Machine Learning for workout personalization
+
+## 🚀 Current Development Progress
+
+### Phase 1: Authentication System ✅
+- User signup/login UI implementation
+- MongoDB integration for user management
+- JWT token implementation
+- Error handling and validation
+
+### Phase 2: Security & Configuration ✅
+- Middleware implementation
+- Token expiration handling
+- Environment variable configuration
+- Authentication flow completion
+
+### Phase 3: Core UI Components ✅
+- Navigation bar with dynamic auth state
+- User profile management
+- Gym location switching interface
+- Logout functionality
+
+### Phase 4: Location Management ✅
+- Gym location management interface
+- Video upload system
+- Integration with Flask API for processing
+- Location switching functionality
+
+### Upcoming Phases 🚧
+- Equipment detection AI implementation
+- Workout routine generation
+- Progress tracking system
+- Diet monitoring features
+
+## 📦 Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+git clone https://github.com/dipeshpandit12/gymze.git
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env` file in the root directory with the following variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```properties
+// /gymze/.env
 
-## Learn More
+# MongoDB Configuration
+MONGODB_URL=your_mongodb_connection_string
 
-To learn more about Next.js, take a look at the following resources:
+# Authentication
+JWT_SECRET=your_jwt_secret_key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# API Configuration
+NEXT_PUBLIC_API_URL=your_api_url
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Cloudinary Configuration
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+NEXT_PUBLIC_CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Google Gemini AI Configuration
+GEMINI_API_KEY=your_gemini_api_key
