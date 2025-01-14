@@ -1,11 +1,11 @@
 # Disclaimer
 
-The `upload-new-gym-location` feature is currently not functional due to limitations in the free version. To get the default uploaded gym locations, please try logging in with the following credentials:
+The upload-new-gym-location feature is currently unavailable due to limitations in the free version on the render hosting for the fast api. As a result, the dashboard will not display any workout routines linked to uploaded gym locations.
 
-- **Email:** 3@gmail.com  
-- **Password:** 3  
+To access the default gym locations and their associated workout routines, please log in using the following credentials:
 
-I apologize for any inconvenience and appreciate your understanding!
+Email: 3@gmail.com
+Password: 3
 
 
 # Gymze 💪
