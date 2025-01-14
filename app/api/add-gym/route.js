@@ -60,7 +60,8 @@ export async function POST(req) {
             // Trigger FastAPI after saving video to MongoDB
             try {
                 // Send POST request to FastAPI
-                const fastApiResponse = await fetch("http://127.0.0.1:8000/process-video", {
+                const flaskApiUrl = `${process.env.FLASK_API_URL}/process-video`;
+                const fastApiResponse = await fetch(flaskApiUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
