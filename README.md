@@ -19,7 +19,6 @@ As someone who frequents different gyms (apartment, work, college), I found it c
 - Automatically detecting gym equipment through video uploads
 - Creating personalized workout routines based on available equipment
 - Managing multiple gym locations efficiently
-- Tracking fitness progress across different locations
 
 ## ✨ Core Features
 
