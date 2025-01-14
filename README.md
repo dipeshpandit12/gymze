@@ -134,6 +134,9 @@ CLOUDINARY_API_SECRET=your_api_secret
 # Google Gemini AI Configuration
 GEMINI_API_KEY=your_gemini_api_key
 
+#FastAPI
+FLASK_API_URL=your_fast_api_backend_url
+
 ```
 # 🏋️‍♂️ Gymze Backend (FastAPI Setup)
 
