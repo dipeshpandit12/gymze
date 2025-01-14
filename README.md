@@ -24,12 +24,12 @@ AI-powered gym companion that detects equipment and creates personalized workout
 ### 4. Video Processing System📹
 - Gym location management
 - Video upload integration
-- Flask API connection
+- Fast API connection
 
 ### 5. Cloud Integration ☁️
 - Cloudinary setup for video storage
 - MongoDB data management
-- Flask API queue system
+- Fast API queue system
 
 ### 6. AI Model Development 🤖
 - YOLOv8 custom model
