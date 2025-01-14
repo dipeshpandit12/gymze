@@ -1,59 +1,66 @@
 "use client";
+import { useState, useEffect } from 'react';
 
-import { useEffect, useState } from "react";
+interface WorkoutDetails {
+  Title: string;
+  "Difficulty Label": string;
+  Instruction: string;
+  Exercises: string[];
+}
 
-
-interface Equipment {
-    detected_items: string[];
+interface WorkoutPlan {
+  [day: string]: WorkoutDetails;
 }
 
 export default function Dashboard() {
-    const [equipment, setEquipment] = useState<Equipment['detected_items']>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+  const [data, setData] = useState<WorkoutPlan | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchEquipment();
-    }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const fetchEquipment = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch("/api/dashboard");
-            const data = await response.json();
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/dashboard");
+      const result = await response.json();
+      if (result.success) {
+        // Parse the string if it's not already an object
+        const workoutPlan = typeof result.workoutPlan === 'string'
+          ? JSON.parse(result.workoutPlan)
+          : result.workoutPlan;
+        setData(workoutPlan);
+      } else {
+        console.error("Failed to fetch workout plan");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to fetch equipment");
-            }
+  if (loading) return <div>Loading...</div>;
+  if (!data) return <div>No workout plan available</div>;
 
-            // Parse detected_items from response
-            const detectedItems = data.equipment.detected_items || [];
-            setEquipment(Array.isArray(detectedItems) ? detectedItems : [detectedItems]);
-
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
-    return (
-        <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Detected Equipment</h2>
-            <ul className="space-y-2">
-                {equipment.length === 0 ? (
-                    <p>No equipment detected</p>
-                ) : (
-                    equipment.map((item, index) => (
-                        <li key={index} className="p-2 bg-black rounded">
-                            {item}
-                        </li>
-                    ))
-                )}
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Your Weekly Workout Plan</h1>
+      {Object.entries(data).map(([day, details]) => (
+        <div key={day} className="mb-6 p-4 border rounded-lg">
+          <h2 className="text-xl font-bold">{day}: {details.Title}</h2>
+          <p className="text-sm text-gray-600">Difficulty: {details["Difficulty Label"]}</p>
+          <p className="my-2">{details.Instruction}</p>
+          <div className="ml-4">
+            <h3 className="font-semibold mb-2">Exercises:</h3>
+            <ul className="list-disc pl-4">
+              {details.Exercises.map((exercise, index) => (
+                <li key={index}>{exercise}</li>
+              ))}
             </ul>
+          </div>
         </div>
-    );
+      ))}
+    </div>
+  );
 }
