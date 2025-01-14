@@ -35,9 +35,9 @@ As someone who frequents different gyms (apartment, work, college), I found it c
   - JWT Authentication
   
 - **Backend**
-  - Node.js/Express.js
+  - Node.js
   - MongoDB
-  - Flask (AI Processing API)
+  - FastAPI (For Running Custom YOLO Model)
 
 - **AI/ML**
   - Computer Vision for equipment detection (YOLO v8)
