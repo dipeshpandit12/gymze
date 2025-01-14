@@ -3,6 +3,47 @@
 ## 🎯 Project Overview
 AI-powered gym companion that detects equipment and creates personalized workouts through video analysis.
 
+##  Purpose
+
+As someone who frequents different gyms (apartment, work, college), I found it challenging to adapt workouts based on available equipment. Gymze solves this by:
+- Automatically detecting gym equipment through video uploads
+- Creating personalized workout routines based on available equipment
+- Managing multiple gym locations efficiently
+- Tracking fitness progress across different locations
+
+## ✨ Core Features
+
+- **Smart Gym Detection**
+  - Video-based equipment recognition
+  - AI-powered equipment analysis
+  - Multiple location management
+  
+- **Personalized Workouts**
+  - Custom routine generation
+  - Equipment-based exercise suggestions
+
+- **Location Management**
+  - Multiple gym profiles
+  - Equipment inventory per location
+  - Quick location switching
+
+## 🛠 Tech Stack
+
+- **Frontend**
+  - Next.js
+  - Tailwind CSS
+  - JWT Authentication
+  
+- **Backend**
+  - Node.js/Express.js
+  - MongoDB
+  - Flask (AI Processing API)
+
+- **AI/ML**
+  - Computer Vision for equipment detection (YOLO v8)
+  - Machine Learning for workout personalization (Gemini Pro API)
+
+
 ## 🚀 Development Phases
 
 ### 1. Authentication System 🔐
