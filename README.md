@@ -35,13 +35,13 @@ As someone who frequents different gyms (apartment, work, college), I found it c
   - JWT Authentication
   
 - **Backend**
-  - Node.js
+  - Node.js/Express.js
   - MongoDB
   - Flask (AI Processing API)
 
 - **AI/ML**
-  - Computer Vision for equipment detection (YOLO v8)
-  - Machine Learning for workout personalization (Gemini Pro)
+  - Computer Vision for equipment detection
+  - Machine Learning for workout personalization
 
 ## 🚀 Current Development Progress
 
@@ -81,13 +81,14 @@ As someone who frequents different gyms (apartment, work, college), I found it c
 ```bash
 git clone https://github.com/dipeshpandit12/gymze.git
 
+```
 ## Environment Variables Setup
 
 Create a `.env` file in the root directory with the following variables:
 
 ```properties
 // /gymze/.env
-
+```
 # MongoDB Configuration
 MONGODB_URL=your_mongodb_connection_string
 
@@ -104,3 +105,5 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 # Google Gemini AI Configuration
 GEMINI_API_KEY=your_gemini_api_key
+
+```
