@@ -88,7 +88,7 @@ Create a `.env` file in the root directory with the following variables:
 
 ```properties
 // /gymze/.env
-```
+
 # MongoDB Configuration
 MONGODB_URL=your_mongodb_connection_string
 
