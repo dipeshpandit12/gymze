@@ -40,8 +40,8 @@ As someone who frequents different gyms (apartment, work, college), I found it c
   - Flask (AI Processing API)
 
 - **AI/ML**
-  - Computer Vision for equipment detection
-  - Machine Learning for workout personalization
+  - Computer Vision for equipment detection (YOLO v8)
+  - Machine Learning for workout personalization (Gemini Pro)
 
 ## 🚀 Current Development Progress
 
