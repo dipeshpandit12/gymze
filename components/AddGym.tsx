@@ -65,7 +65,7 @@ export default function UploadVideo() {
         if (response.ok) {
           setTitle("");
           setVideo(null);
-          toast.success('Video uploaded successfully!', {
+          toast.success('Video uploaded successfully! Please wait 10 minutes to detect the items', {
             position: "top-right",
             autoClose: 3000
           });

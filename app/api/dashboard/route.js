@@ -28,11 +28,11 @@ export async function GET() {
       detected_items: { $exists: true, $type: "array" },
     }).select("detected_items");
 
-    console.log(video);
+    // console.log(video);
 
     if (!video) {
       return NextResponse.json(
-        { message: "No active video found" },
+        { message: "Add your gym location" },
         { status: 404 }
       );
     }
@@ -41,11 +41,11 @@ export async function GET() {
     );
     if (!userProfile) {
       return NextResponse.json(
-        { message: "User Profile is not created" },
+        { message: "Profile is not created" },
         { status: 404 }
       );
     }
-    console.log(userProfile);
+    // console.log(userProfile);
 
     if (video && userProfile) {
       try {
@@ -58,7 +58,7 @@ User Profile: ${JSON.stringify(userProfile)}
 Available Equipment: ${JSON.stringify(video)}
 
 Generate a structured workout plan for a week(7 days) with the use of only available gym equipment and analysing the User Profile data:
-1. Provide only 7 days workout routine in this format:
+1. Provide only 7 days workout routine in this format, strickly follow the pattern:
 
 {
     "Day 1": {
@@ -85,12 +85,12 @@ Generate a structured workout plan for a week(7 days) with the use of only avail
         const response = result.response;
         const text = response.text();
 
-        console.log(text);
+        // console.log(text);
         return NextResponse.json({
             success: true,
             workoutPlan:text});
-      } catch (error) {
-        console.error("Error generating workout plan:", error);
+      } catch  {
+        // console.error("Error generating workout plan:", error);
         return NextResponse.json(
           { message: "Error generating workout plan" },
           { status: 500 }
@@ -103,7 +103,7 @@ Generate a structured workout plan for a week(7 days) with the use of only avail
       workoutPlan: "Either detected items or Userprofile not found",
     });
   } catch (error) {
-    console.error("Error fetching gym location:", error);
+    // console.error("Error fetching gym location:", error);
     return NextResponse.json(
       { message: error.message || "Error fetching gym location" },
       { status: 500 }

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface WorkoutDetails {
   Title: string;
@@ -15,6 +16,7 @@ interface WorkoutPlan {
 export default function Dashboard() {
   const [data, setData] = useState<WorkoutPlan | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -31,22 +33,27 @@ export default function Dashboard() {
           : result.workoutPlan;
         setData(workoutPlan);
       } else {
-        console.error("Failed to fetch workout plan");
+        toast.error(result.message || 'Failed to fetch workout plan');
+        setError(result.message || 'Failed to fetch workout plan');
+        // console.error("Failed to fetch workout plan");
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (!data) return <div>No workout plan available</div>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  // if (!data) return <div>Add the Gym Location and Create your</div>;
 
   return (
     <div className="p-4">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4">Your Weekly Workout Plan</h1>
-      {Object.entries(data).map(([day, details]) => (
+      {data && Object.entries(data).map(([day, details]) => (
         <div key={day} className="mb-6 p-4 border rounded-lg">
           <h2 className="text-xl font-bold">{day}: {details.Title}</h2>
           <p className="text-sm text-gray-600">Difficulty: {details["Difficulty Label"]}</p>
@@ -61,6 +68,9 @@ export default function Dashboard() {
           </div>
         </div>
       ))}
+      {
+        error && <div className="text-red-500">Error: {error}</div>
+      }
     </div>
   );
 }
