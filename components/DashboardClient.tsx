@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -12,13 +12,12 @@ interface WorkoutDetails {
 interface WorkoutPlan {
   [day: string]: WorkoutDetails;
 }
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default function DashboardClient() {
   const [data, setData] = useState<WorkoutPlan | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   const fetchWithRetry = async (retries = 3) => {
     for (let i = 0; i < retries; i++) {

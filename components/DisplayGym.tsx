@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -19,7 +19,7 @@ export default function DisplayGym() {
     const [activeGym, setActiveGym] = useState<VideoTitle | null>(null);
 
     useEffect(() => {
-        fetchTitles();
+        fetchTitles();  
     }, []);
 
     const fetchTitles = async () => {
