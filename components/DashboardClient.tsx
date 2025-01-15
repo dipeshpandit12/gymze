@@ -10,6 +10,7 @@ interface WorkoutDetails {
 }
 
 interface WorkoutPlan {
+  
   [day: string]: WorkoutDetails;
 }
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
